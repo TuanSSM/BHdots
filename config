@@ -1,203 +1,347 @@
-## Configuration file for CAVA. Default values are commented out. Use either ';' or '#' for commenting.
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+background = ${xrdb:color0:#222}
+background-alt = #444
+foreground = ${xrdb:color7:#222}
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/bar1]
+monitor = ${env:MONITOR:eDP1}
+width = 90%
+height = 30
+offset-x = 5%
+offset-y = 1%
+radius = 6.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+
+border-size = 4
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
 
 
-[general]
+;Most of the lines adding fonts are garbage but won't mess with them i had so much pain
 
-# Smoothing mode. Can be 'normal', 'scientific' or 'waves'. DEPRECATED as of 0.6.0
-; mode = normal
- 
-# Accepts only non-negative values.
-; framerate = 60
+font-0 = fixed:pixelsize=11;1
+font-1 = unifont:fontformat=truetype:size=12:antialias=false;0
+font-2 = "Wuncon Siji:pixelsize=12;1"
+font-3 = Font Awesome 5 Free:pixelsize=10;2
+font-4 = Font Awesome 5 Free Solid:pixelsize=10;2
+font-5 = Font Awesome 5 Brands:pixelsize=10;2
+font-6 = Monospace:pixelsize=10;2
 
-# 'autosens' will attempt to decrease sensitivity if the bars peak. 1 = on, 0 = off
-# new as of 0.6.0 autosens of low values (dynamic range)
-# 'overshoot' allows bars to overshoot (in % of terminal height) without initiating autosens. DEPRECATED as of 0.6.0
-; autosens = 1
-; overshoot = 20
-
-# Manual sensitivity in %. Autosens must be turned off for this to take effect.
-# 200 means double height. Accepts only non-negative values.
-; sensitivity = 100
-
-# The number of bars (0-200). 0 sets it to auto (fill up console).
-# Bars' width and space between bars in number of characters.
-# These options DO NOT apply if you're using 'sdl' or 'x' modes.
-; bars = 0
-; bar_width = 2
-; bar_spacing = 1
-
-# Lower and higher cutoff frequencies for lowest and highest bars
-# the bandwidth of the visualizer.
-# Note: there is a minimum total bandwidth of 43Mhz x number of bars.
-# Cava will automatically increase the higher cutoff if a too low band is specified.
-; lower_cutoff_freq = 50
-; higher_cutoff_freq = 10000
+font-7 = SanFranciscoDisplay-Regular:pixelsize=12;3
+font-8 = unifont:fontformat=truetype:size=7:antialias=false;2
+font-9 = FontAwesome5Free:style=Solid:pixelsize=11;3
+font-10 = FontAwesome5Free:style=Regular:pixelsize=11;3
+font-11 = Hack:size=13;2
+font-12 FontAwesome:style=Regular:pixelsize=11;3
 
 
+modules-left = i3
+modules-center = spotify 
+modules-right = xkeyboard wlan eth battery date powermenu
 
-[window]
+tray-position = right
+tray-padding = 2
+tray-transparent = true
+tray-background = #0063ff
 
-# Bars' width and space between bars in pixels.
-# Doesn't apply to terminal or serial modes.
-; bar_width = 20
-; bar_spacing = 4
+;wm-restack = bspwm
+wm-restack = i3
 
-# Window width and height
-; width = 640
-; height = 480
+override-redirect = true
 
-# Fullscreen toggle (1 = on, 0 = off)
-; fullscreen = 0
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
 
-# Enables or disables window borders (1 = on, 0 = off)
-; border = 1
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
 
-# Window transparency toggle (your system must have a compositing WM)
-; transparency = 0
+cursor-click = pointer
+cursor-scroll = ns-resize
 
-# Keeps the window under any other (works under X only)
-; keep_below = 0
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
 
-# Set window properties like WM_CLASS (works under X only)
-; set_win_props = 0
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
 
-# This allows for the window to be 'aligned' to a part of a screen
-# The following positions are supported:
-# top_left, top, top_right, left, center, right, bottom_left,
-# bottom, bottom_right and none if you don't want manual positioning
-; alignment = 'none'
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+;format-prefix-underline = ${colors.secondary}
 
-# Additionally we can further adjust the positions if needed (in pixels)
-; x_padding = 0
-; y_padding = 0
+label-layout = %layout%
+;label-layout-underline = ${colors.secondary}
 
-# This option will drastically increase performance (in most cases).
-; opengl = 1
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+;label-indicator-underline = ${colors.secondary}
 
+;[module/filesystem]
+;type = internal/fs
+;interval = 25
+;
+;mount-0 = /
+;
+;label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
+;label-unmounted = %mountpoint% not mounted
+;label-unmounted-foreground = ${colors.foreground-alt}
 
-[input]
+[module/bspwm]
+type = internal/bspwm
 
-# Audio capturing method. Possible methods are: 'pulse', 'alsa' or 'fifo'.
-# Defaults to 'pulse', 'alsa' or 'fifo', in that order, dependent on what support cava was built with.
-#
-# All input methods uses the same config variable 'source'
-# to define where it should get the audio.
-#
-# For pulseaudio 'source' will be the source. Default: 'auto', which uses the monitor source of the default sink
-# (all pulseaudio sinks(outputs) have 'monitor' sources(inputs) associated with them).
-# 
-# For alsa 'source' will be the capture device.
-# For fifo 'source' will be the path to fifo-file.
-; method = pulse
-; source = auto
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+:label-focused-underline= ${colors.primary}
+label-focused-padding = 2
 
-; method = alsa
-; source = hw:Loopback,1
+label-occupied = %index%
+label-occupied-padding = 2
 
-; method = fifo
-; source = /tmp/mpd.fifo
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
 
-; method = portaudio
-; source = auto
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 2
 
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+strip-wsnumbers = true
+wrapping-scroll = false
 
-[output]
+ws-icon-0 = 1;α
+ws-icon-1 = 2;β
+ws-icon-2 = 3;γ
+ws-icon-3 = 4;δ
+ws-icon-4 = 5;ε
+ws-icon-5 = 6;ζ
+ws-icon-6 = 7;η
+ws-icon-7 = 8;θ
+ws-icon-8 = 9;ι
+ws-icon-9 = 10;κ
+; Only show workspaces on the same output as the bar
 
-# Ouput method. Can be 'ncurses', 'noncurses', 'raw', 'sdl' or 'x'. 
-# 'noncurses' is for systems that does not suport ncurses.
-# 'raw' is a 16 bit data stream of the bar heights that can be used to send to other applications.
-# 'raw' defaults to 200 bars, which can be adjusted in the 'bars' option above.
-# 'sdl' is for a graphical window using OpenGL
-# 'x' is for a graphical window using XRender (usually faster, unsupported in wayland however)
-# 'win' is a win32 graphical window (which embedded into the NT kernel)
-; method = ncurses
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
 
-# Visual channels. Can be 'stereo' or 'mono'.
-# 'stereo' mirrors both channels with low frequencies in center.
-# 'mono' averages both channels and outputs left to right lowest to highest frequencies.
-; channels = stereo
+; focused = Active workspace on focused monitor
+label-focused = %icon%
+label-focused-background = ${module/bspwm.label-focused-background}
+;label-focused-underline = ${module/bspwm.label-focused-underline}
+label-focused-padding = ${module/bspwm.label-focused-padding}
 
-# Raw output target. A fifo will be created if target does not exist.
-; raw_target = /dev/stdout
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %icon%
+label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 
-# Raw data format. Can be 'binary' or 'ascii'.
-; data_format = binary
+; visible = Active workspace on unfocused monitor
+label-visible = %icon%
+label-visible-background = ${self.label-focused-background}
+;label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
 
-# Binary bit format, can be '8bit' (0-255) or '16bit' (0-65530).
-; bit_format = 16bit
+; urgent = Workspace with urgency hint set
+label-urgent = %icon%
+label-urgent-background = ${module/bspwm.label-urgent-background}
+label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
-# Ascii max value. In 'ascii' mode range will run from 0 to value specified here
-; ascii_max_range = 1000
+[module/mpd]
+type = internal/mpd
+format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>
 
-# Ascii delimiters. In ascii format each bar and frame is separated by a delimiters.
-# Use decimal value in ascii table (i.e. 59 = ';' and 10 = '\n' (line feed)).
-; bar_delimiter = 59
-; frame_delimiter = 10
+icon-prev = 
+icon-stop = 
+icon-play = 
+icon-pause = 
+icon-next = 
 
+label-song-maxlen = 25
+label-song-ellipsis = true
 
-[color]
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix = "  "
+format = <label>
+exec = python ~/.config/polybar/spotify_status.py
+format-underline = #1db954
 
-# Colors can be one of seven predefined: black, blue, cyan, green, magenta, red, white, yellow.
-# Or defined by hex code '#xxxxxx' (hex code must be within ''). User defined colors requires a
-# terminal that can change color definitions such as Gnome-terminal or rxvt.
-# Or in case you're running in 'x' you could use the default option
-; background = black
-; foreground = cyan
+[module/wlan]
+type = internal/network
+interface = wlo1
+interval = 3.0
 
-# This adjusts the opacity of the bars (must have transparency and OpenGL in order for it to work)
-; foreground_opacity = 1.0
+format-connected = <ramp-signal> <label-connected>
+;format-connected-underline = #9f78e1
+label-connected = %essid%
 
-# Gradient mode, only hex defined colors are supported, background must also be defined in hex
-# or remain commented out. 1 = on, 0 = off. Warning: for certain terminal emulators cava will
-# not able to restore color definitions on exit, simply restart your terminal to restore colors.
-# For graphical modes, you have to enable transparency.
-; gradient = 0
-; gradient_color_1 = '#0099ff'
-; gradient_color_2 = '#ff3399'
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
 
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
 
+[module/eth]
+type = internal/network
+interface = eno1
+interval = 3.0
 
-[smoothing]
+format-connected-underline = #55aa55
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
 
-# Percentage value for integral smoothing. Takes values from 0 - 100.
-# Higher values means smoother, but less precise. 0 to disable.
-; integral = 70
+format-disconnected =
+;format-disconnected = <label-disconnected>
+;format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+;label-disconnected-foreground = ${colors.foreground-alt}
 
-# Disables or enables the so-called "Monstercat smoothing" with or without "waves". Set to 0 to disable. 
-; monstercat = 1
-; waves = 0
+[module/date]
+type = internal/date
+interval = 5
 
-# Set gravity percentage for "drop off". Higher values means bars will drop faster.
-# Accepts only non-negative values. 50 means half gravity, 200 means double. Set to 0 to disable "drop off".
-; gravity = 100
+date =
+date-alt = " %Y-%m-%d"
 
-# In bar height, bars that would have been lower that this will not be drawn.
-; ignore = 0
+time = %H:%M
+time-alt = %H:%M:%S
 
-# Variable logarithm (the higher the value, the more intense) 
-; log = 1.0
+format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = #0a6cf5
 
-# Average out the value of each odd bar (just like the monstercat visualizer)
-; oddoneout = 0
+label = %date% %time%
 
+[module/volume]
+type = internal/volume
 
-[shadow]
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
 
-# Fake shadow effect (works with transparency only)
-# Make sure that the shadow size is NOT larger then the bar spacing
-; size = 0
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted = sound muted
 
-# Color format is #aarrggbb
-; color = "#ff000000"
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
 
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 98
 
-[eq]
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = #ffb52a
 
-# This one is tricky. You can have as much keys as you want.
-# Remember to uncomment more then one key! More keys = more precision.
-# Look at readme.md on github for further explanations and examples.
-; 1 = 1 # bass
-; 2 = 1
-; 3 = 1 # midtone
-; 4 = 1
-; 5 = 1 # treble
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-underline = ${self.format-charging-underline}
+
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.foreground-alt}
+;format-full-underline = ${self.format-charging-underline}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-foreground = ${colors.foreground-alt}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-foreground = ${colors.foreground-alt}
+animation-charging-framerate = 750
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.secondary}
+label-close =  cancel
+label-close-foreground = ${colors.secondary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
